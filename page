@@ -1,0 +1,105 @@
+/**
+ *
+ * 分页插件
+ */
+var pages = function(element, option){
+
+    this.defaults = {
+        'showPage':5,//展示页码
+        'totalPage':0,//总页码
+        'totalList':0,//总条数
+        'perPageList':10,//每页显示条数
+        'currentPage':1,//当前页码
+        'url':'',//URL
+        'element':element//dom元素
+    };
+
+    this.options = $.extend({}, this.defaults, option);
+
+    var url = window.location.href;
+    if(url.indexOf('?') == 0){
+        url = url.replace(/&page=\d*/g,'');
+        url += '&page=';
+    }else{
+        url = url.replace(/\?page=\d*/g,'');
+        url += '?page=';
+    }
+
+    this.options.url = url;
+};
+
+pages.prototype.display = function(){
+    var _this = this;
+    var html = '';
+    var pages = this.calculate();
+        html += '<ul style="margin-top: 0;" class="pagination fl">'+
+                '<li><span>共<em>'+_this.options.totalList+'</em>条</span></li>';
+        if(this.options.currentPage > 1){
+            var pre = _this.options.currentPage - 1;
+            html += '<li><a href="'+_this.options.url+pre+'">«</a></li>';
+        }
+
+        $.each(pages, function(i,item){
+            if(_this.options.currentPage == item){
+                html += '<li class="active"><a href="">'+item+'<span class="sr-only">(current)</span></a></li>';
+            }else{
+                html += '<li><a href="'+_this.options.url+item+'">'+item+'</a></li>';
+            }
+        });
+
+        if(this.options.currentPage < this.options.totalPage){
+            var next = _this.options.currentPage + 1;
+            html += '<li><a href="'+_this.options.url+next+'">»</a></li>';
+        }
+
+        html += '<li><span>共<em id="totalpage">'+_this.options.totalPage+'</em>页</span></li>'+
+                '<li class="go"><span class="ml30">第</span><input type="text" class="form-control fl" id="selectpage">'+
+                '<span>页</span><a id="changepage" class="mb-sm btn btn-default">GO</a></li></ul>';
+
+        _this.options.element.html(html);
+
+    $('#changepage').click(function(){
+        var page = $('#selectpage').val();
+        if(page != '' && parseInt(page) <= _this.options.totalPage){
+            window.location.href = _this.options.url+page;
+        }
+    });
+};
+
+/**
+ *
+ * 计算页码
+ */
+pages.prototype.calculate = function(){
+    var arr = [];
+    var start = 1;
+    var end = this.options.totalPage;
+    var pageOffset = 2;
+
+    if(this.options.totalPage > this.options.showPage){
+        if(this.options.currentPage > pageOffset){
+            start = this.options.currentPage - pageOffset;
+            end = this.options.totalPage > this.options.currentPage + pageOffset ? this.options.currentPage + pageOffset : this.options.totalPage;
+        }else{
+            end = this.options.showPage;
+        }
+
+        if(this.options.currentPage + pageOffset > this.options.totalPage){
+            start = start - (this.options.currentPage + pageOffset - end);
+        }
+    }
+
+    for(var i = 0; i < 5; i++){
+        if(start + i <= end){
+            arr[i] = start + i;
+        }
+    }
+
+    return arr;
+
+}
+
+$.fn.crmPage = function(option) {
+    var pagePlugin = new pages(this, option);
+    return pagePlugin.display();
+}
