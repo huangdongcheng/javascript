@@ -101,5 +101,5 @@ pages.prototype.calculate = function(){
 
 $.fn.crmPage = function(option) {
     var pagePlugin = new pages(this, option);
-    return pagePlugin.display();
+    pagePlugin.display();
 }
