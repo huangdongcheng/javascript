@@ -1,2 +1,1 @@
-# javascript
-分页插件
+# javascriptJavaScript 小结
