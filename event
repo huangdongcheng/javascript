@@ -1,4 +1,6 @@
-var elements = document.getElementById("mainGood");
+<input type="checkbox" name="mainGood" id="mainGood">
+<script>
+	var elements = document.getElementById("mainGood");
 	
 	var eventUtil = {
 		addHandle:function(element, type, handle){
@@ -18,11 +20,44 @@ var elements = document.getElementById("mainGood");
 			}else{
 				element['on'+type] = null;
 			}
+		},
+
+		getEvent:function(event){
+			return event ? event : window.event;
+		},
+
+		getTye:function(event){
+			return event.type;
+		},
+
+		getElement:function(){
+			return event.target || event.srcElement;
+		},
+
+		preventDefault:function(event){
+			if(event.preventDefault){
+				event.preventDefault();
+			}else{
+				event.returnValue = false;
+			}
+		},
+
+		stopPropagation:function(event){
+			if(event.stopPropagation){
+				event.stopPropagation();
+			}else{
+				event.cancelBubble=true;
+			}
 		}
+
 	};
 
-	eventUtil.addHandle(elements,'click',function(){
+
+
+	eventUtil.addHandle(elements,'click',function(event){
 		alert(333);
 		event.stopPropagation();
 		event.preventDefault();
+
 	});
+</script>
