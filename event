@@ -23,4 +23,6 @@ var elements = document.getElementById("mainGood");
 
 	eventUtil.addHandle(elements,'click',function(){
 		alert(333);
+		event.stopPropagation();
+		event.preventDefault();
 	});
