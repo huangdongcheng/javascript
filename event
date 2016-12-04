@@ -1,0 +1,26 @@
+var elements = document.getElementById("mainGood");
+	
+	var eventUtil = {
+		addHandle:function(element, type, handle){
+			if(element.addEventListener){
+				element.addEventListener(type, handle, false);
+			}else if(element.attachEvent){
+				element.attachEvent('on'+type, handle);
+			}else{
+				element['on'+type] = handle;
+			}
+		},
+		removeHandle:function(element, type, handle){
+			if(element.removeEventListener){
+				element.removeEventListener(type, handle, false);
+			}else if(element.detachEvent){
+				element.detachEvent('on'+type, handle);
+			}else{
+				element['on'+type] = null;
+			}
+		}
+	};
+
+	eventUtil.addHandle(elements,'click',function(){
+		alert(333);
+	});
